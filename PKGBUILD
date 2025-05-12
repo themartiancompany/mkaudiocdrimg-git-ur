@@ -74,7 +74,7 @@ license=(
   "AGPL3"
 )
 _url="${url}"
-_branch="main"
+_branch="master"
 _tag_name="branch"
 _tag="${_branch}"
 _tarname="${_pkg}"
