@@ -19,13 +19,29 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# Maintainer: Truocolo <truocolo@aol.com>
-# Maintainer: Truocolo <truocolo@0x6E5163fC4BFc1511Dbe06bB605cc14a3e462332b>
-# Maintainer: Pellegrino Prevete (dvorak) <pellegrinoprevete@gmail.com>
-# Maintainer: Pellegrino Prevete (dvorak) <dvorak@0x87003Bd6C074C713783df04f36517451fF34CBEf>
+# Maintainer:
+#   Truocolo
+#     <truocolo@aol.com>
+#     <truocolo@0x6E5163fC4BFc1511Dbe06bB605cc14a3e462332b>
+# Maintainer:
+#   Pellegrino Prevete (dvorak)
+#     <pellegrinoprevete@gmail.com>
+#     <dvorak@0x87003Bd6C074C713783df04f36517451fF34CBEf>
 
 # shellcheck disable=SC2034
+if [[ ! -v "_git" ]]; then
+  _git="false"
+fi
 _py="python"
+_pyver="$( \
+  "${_py}" \
+    -V | \
+    awk \
+      '{print $2}')"
+_pymajver="${_pyver%.*}"
+_pyminver="${_pymajver#*.}"
+_pynextver="${_pymajver%.*}.$(( \
+  ${_pyminver} + 1))"
 _pkg=mkaudiocdrimg
 _namespace="tallero"
 _pkgbase="${_pkg}"
@@ -59,8 +75,9 @@ conflicts=(
 )
 depends=(
   'ffmpeg'
+  "${_py}>=${_pymajver}"
+  "${_py}<${_pynextver}"
   'shntool'
-  "${_py}-appdirs"
 )
 makedepends=(
   "${_py}-setuptools"
@@ -77,9 +94,15 @@ _url="${url}"
 _branch="master"
 _tag_name="branch"
 _tag="${_branch}"
-_tarname="${_pkg}"
-_uri="git+${_url}#${_tag_name}=${_tag}"
+_tarname="${_pkg}-${_tag}"
 _src="${_tarname}::${_uri}"
+if [[ "${_git}" == "true" ]]; then
+  _uri="git+${_url}#${_tag_name}=${_tag}"
+  _src="${_tarname}::${_uri}"
+elif [[ "${_git}" == "false" ]]; then
+  _uri="${_url}/archive/${_tag}.zip"
+  _src="${_tarname}.zip::${_uri}"
+fi
 source=(
   "${_src}"
 )
@@ -89,7 +112,7 @@ sha256sums=(
 
 pkgver() {
   cd \
-    "${_pkg}"
+    "${_tarname}"
   git \
     describe \
       --tags | \
@@ -99,7 +122,7 @@ pkgver() {
 
 package() {
   cd \
-    "${_pkg}"
+    "${_tarname}"
   "${_py}" \
     "setup.py" \
       install \
