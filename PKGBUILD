@@ -243,6 +243,14 @@ package_mkaudiocdrimg-docs-git() {
   depends+=(
     "${_pkg}=${pkgver}"
   )
+  provides=(
+    "${_pkg}-docs=${pkgver}"
+    "${_py}-${_pkg}-docs=${pkgver}"
+  )
+  conflicts=(
+    "${_pkg}-docs"
+    "${_py}-${_pkg}-docs"
+  )
   _make_opts+=(
     DESTDIR="${pkgdir}"
     PREFIX="/usr"
