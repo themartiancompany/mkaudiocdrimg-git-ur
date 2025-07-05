@@ -222,7 +222,7 @@ pkgver() {
   fi
 }
 
-package_mkaudiocdrimg() {
+package_mkaudiocdrimg-git() {
   cd \
     "${_tarname}"
   "${_py}" \
@@ -237,7 +237,7 @@ package_mkaudiocdrimg() {
     "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
 
-package_mkaudiocdrimg() {
+package_mkaudiocdrimg-docs-git() {
   local \
     _make_opts=()
   _make_opts+=(
