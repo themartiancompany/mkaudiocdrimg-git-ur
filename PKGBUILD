@@ -96,7 +96,6 @@ _branch="master"
 _tag_name="branch"
 _tag="${_branch}"
 _tarname="${_pkg}-${_tag}"
-_src="${_tarname}::${_uri}"
 if [[ "${_git}" == "true" ]]; then
   _uri="git+${_url}#${_tag_name}=${_tag}"
   _src="${_tarname}::${_uri}"
