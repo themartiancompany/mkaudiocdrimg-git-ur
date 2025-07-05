@@ -240,6 +240,9 @@ package_mkaudiocdrimg-git() {
 package_mkaudiocdrimg-docs-git() {
   local \
     _make_opts=()
+  depends+=(
+    "${_pkg}=${pkgver}"
+  )
   _make_opts+=(
     DESTDIR="${pkgdir}"
     PREFIX="/usr"
