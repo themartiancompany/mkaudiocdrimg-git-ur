@@ -43,7 +43,6 @@ _pyminver="${_pymajver#*.}"
 _pynextver="${_pymajver%.*}.$(( \
   ${_pyminver} + 1))"
 _pkg=mkaudiocdrimg
-_namespace="tallero"
 _pkgbase="${_pkg}"
 _pkgname="${_pkgbase}"
 pkgbase="${_pkg}-git"
@@ -77,9 +76,11 @@ depends=(
   'ffmpeg'
   "${_py}>=${_pymajver}"
   "${_py}<${_pynextver}"
+  "${_py}-appdirs"
   'shntool'
 )
 makedepends=(
+  "${_py}"
   "${_py}-setuptools"
 )
 if [[ "${_git}" == "true" ]]; then
