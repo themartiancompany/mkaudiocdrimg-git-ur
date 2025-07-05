@@ -30,7 +30,10 @@
 
 # shellcheck disable=SC2034
 if [[ ! -v "_git" ]]; then
-  _git="false"
+  _git="true"
+fi
+if [[ ! -v "_docs" ]]; then
+  _docs="true"
 fi
 _py="python"
 _pyver="$( \
@@ -49,10 +52,15 @@ pkgbase="${_pkg}-git"
 pkgname=(
   "${_pkg}-git"
 )
+if [[ "${_docs}" == "true" ]]; then
+  pkgname+=(
+    "${_pkg}-docs-git"
+  )
+fi
 pkgver="1.0+1+g92f8081"
 pkgrel=1
 _pkgdesc=(
-  "Make an audio CD-R image"
+  "Produces an audio CD-R image"
   "from media files."
 )
 pkgdesc="${_pkgdesc[*]}"
@@ -83,6 +91,11 @@ makedepends=(
   "${_py}"
   "${_py}-setuptools"
 )
+if [[ "${_docs}" == "true" ]]; then
+  makedepends+=(
+    "make"
+  )
+fi
 if [[ "${_git}" == "true" ]]; then
   makedepends+=(
     "git"
@@ -209,7 +222,7 @@ pkgver() {
   fi
 }
 
-package() {
+package_mkaudiocdrimg() {
   cd \
     "${_tarname}"
   "${_py}" \
@@ -222,4 +235,18 @@ package() {
     "COPYING" \
     -t \
     "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
+
+package_mkaudiocdrimg() {
+  local \
+    _make_opts=()
+  _make_opts+=(
+    DESTDIR="${pkgdir}"
+    PREFIX="/usr"
+  )
+  cd \
+    "${_tarname}"
+  make \
+    "${_make_opts[@]}" \
+    install-man
 }
